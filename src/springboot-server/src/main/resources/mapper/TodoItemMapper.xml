@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.classroom.rbac.demo.TodoItemMapper">
+
+    <!-- 添加待办事项 -->
+    <insert id="addTodoItem" parameterType="com.classroom.rbac.demo.TodoItem">
+        INSERT INTO items (user_id, name, creation_time, completion_status, completion_time)
+        VALUES (#{userId}, #{name}, #{creationTime}, #{completionStatus}, #{completionTime})
+    </insert>
+
+    <!-- 获取用户所有待办事项 -->
+    <select id="getTodoItemsByUserID" resultMap="TodoItemResultMap" parameterType="java.lang.Integer">
+        SELECT * FROM items WHERE user_id = #{userId}
+    </select>
+
+
+    <!-- 根据ID获取待办事项 -->
+    <select id="getTodoItemById" resultMap="TodoItemResultMap" parameterType="java.lang.Integer">
+        SELECT * FROM items WHERE item_id = #{id}
+    </select>
+
+    <!-- 更新待办事项 -->
+    <update id="updateTodoItem" parameterType="com.classroom.rbac.demo.TodoItem">
+        UPDATE items
+        SET name = #{name}, creation_time = #{creationTime}, completion_status = #{completionStatus}, completion_time = #{completionTime}
+        WHERE item_id = #{itemId} and user_id = #{userId}
+    </update>
+
+    <!-- 定义结果映射，手动映射以确保类型转换正确 -->
+    <resultMap id="TodoItemResultMap" type="com.classroom.rbac.demo.TodoItem">
+        <id property="itemId" column="item_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="name" column="name"/>
+        <result property="creationTime" column="creation_time"/>
+        <result property="completionStatus" column="completion_status"/>
+        <result property="completionTime" column="completion_time"/>
+    </resultMap>
+
+</mapper>

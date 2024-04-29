@@ -1,0 +1,64 @@
+version: "3.4"
+
+services:
+    mysql:
+        container_name: ssadmin-mysql
+        image: mysql:8
+        restart: unless-stopped
+        tty: true
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: ${MYSQL_DATABASE:-userinfo}  
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-123456}
+        volumes:
+            - mysql:/var/lib/mysql/
+            - ./src/sql/ssadmin_init.sql:/docker-entrypoint-initdb.d/ssadmin_init.sql:ro
+        networks:
+            - my_network
+
+    phpmyadmin:
+        container_name: test-phpmyadmin
+        image: phpmyadmin/phpmyadmin:4.9
+        restart: always
+        ports:
+            - "8888:80"
+        environment:
+            PMA_HOST: ssadmin-mysql
+        networks:
+            - my_network
+
+    server:
+        container_name: ssadmin-server
+        build:
+            context: ./src/springboot-server/
+        image: ssadmin-server
+        restart: unless-stopped
+        ports:
+            - "28080:28080"   
+        networks:
+            - my_network
+        environment:
+            JAVA_OPTS: ${JAVA_OPTS:- -Xms512m -Xmx512m -Djava.security.egd=file:/dev/./urandom}
+            ARGS: --spring.datasource.url=${DATASOURCE_URL:-jdbc:mysql://ssadmin-mysql:3306/userinfo?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true} --spring.datasource.username=${DATASOURCE_USERNAME:-root} --spring.datasource.password=${DATASOURCE_PASSWORD:-123456}
+        depends_on:
+            - mysql
+    web:
+        container_name: ssadmin-web
+        build:
+            context: ./src/vue-web
+        image: ssadmin-web
+        restart: unless-stopped
+        ports:
+            - "80:80"
+        networks:
+            - my_network
+        depends_on:
+            - server
+volumes:
+    mysql:
+        driver: local
+
+networks:
+    my_network:
+        driver: bridge
