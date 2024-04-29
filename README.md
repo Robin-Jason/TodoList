@@ -6,8 +6,8 @@ yum -y group install "Development Tools"
 ```
 
 ```bash
-git clone https://gitee.com/OSABC/automated-deployment-example.git
-cd automated-deployment-example
+git clone https://github.com/SolitudeRK-Jason/TodoList.git
+cd TodoList
 ```
 
 ### **构建Jar包文件**
