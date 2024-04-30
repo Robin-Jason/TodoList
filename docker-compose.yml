@@ -9,7 +9,7 @@ services:
         ports:
             - "3306:3306"
         environment:
-            MYSQL_DATABASE: ${MYSQL_DATABASE:-cms}  
+            MYSQL_DATABASE: ${MYSQL_DATABASE:-userinfo}  
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-123456}
         volumes:
             - mysql:/var/lib/mysql/
@@ -40,7 +40,7 @@ services:
             - my_network
         environment:
             JAVA_OPTS: ${JAVA_OPTS:- -Xms512m -Xmx512m -Djava.security.egd=file:/dev/./urandom}
-            ARGS: --spring.datasource.url=${DATASOURCE_URL:-jdbc:mysql://ssadmin-mysql:3306/cms?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true} --spring.datasource.username=${DATASOURCE_USERNAME:-root} --spring.datasource.password=${DATASOURCE_PASSWORD:-123456}
+            ARGS: --spring.datasource.url=${DATASOURCE_URL:-jdbc:mysql://ssadmin-mysql:3306/userinfo?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true} --spring.datasource.username=${DATASOURCE_USERNAME:-root} --spring.datasource.password=${DATASOURCE_PASSWORD:-123456}
         depends_on:
             - mysql
     web:
