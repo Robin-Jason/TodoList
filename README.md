@@ -58,7 +58,6 @@ docker run -it --rm --name ssadmin-maven \
     -v "$PWD/src/springboot-server":/usr/src/mymaven \
     -w /usr/src/mymaven \
     maven:3.8.4-jdk-8 mvn clean install package -e -Dmaven.test.skip=true
-
 ```
 
 ### 
